@@ -1,0 +1,16 @@
+Hydrogram==0.1.4
+TgCrypto
+django
+uvloop
+xxhash
+loguru
+python-dotenv
+black
+apscheduler
+
+
+
+
+
+
+
