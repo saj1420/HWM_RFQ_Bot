@@ -134,7 +134,7 @@ async def add_broker_handler(client, message):
     message.stop_propagation()
 
 
-@Client.on_message(shared_object.clients["bot_admins"] & filters.command("removebrokerchannel", prefixes="!"))
+@Client.on_message(shared_object.clients["bot_admins"] & filters.command("removebrokerchannel", prefixes="!"), group=-1)
 async def remove_broker_handler(client, message):
     chat_object = await get_chat_details(client, message)
 
@@ -145,7 +145,7 @@ async def remove_broker_handler(client, message):
     message.stop_propagation()
 
 
-@Client.on_message(shared_object.clients["bot_admins"] & filters.command("listbrokerchannels", prefixes="!"))
+@Client.on_message(shared_object.clients["bot_admins"] & filters.command("listbrokerchannels", prefixes="!"), group=-1)
 async def list_broker_handler(client, message):
     output = "List of broker channels\n"
 
