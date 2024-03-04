@@ -282,6 +282,15 @@ async def send_offer(client, callback_query):
 
     if not question_object:
         public_channel_data_string = await public_ad_question(linked_ad)
+        if conversation_type == ConversationType.RESPONSE_TO_QUOTE:
+            response_to = f"RFQ ID: `{linked_ad.unique_id}`"
+        else:
+            response_to = f"RFS ID: `{linked_ad.unique_id}`"
+
+        public_channel_data_string = (
+            f"Thank you for responding to {response_to}\nHere are the RFQ details:\n" + public_channel_data_string
+        )
+        public_channel_data_string += "Please respond to the messages below and after you have answered all questions, you will be prompted to Submit your offer."
         await client.send_message(callback_query.from_user.id, public_channel_data_string)
 
         await initiate_questions(
@@ -346,8 +355,8 @@ async def user_submit_callback_handler(client, callback_query):
 
     conversation_data_list = []
 
-    async for conversation_data in QnA.objects.filter(from_user_id=from_user_id).select_related('linked_ad').order_by(
-        "question_order"
+    async for conversation_data in (
+        QnA.objects.filter(from_user_id=from_user_id).select_related('linked_ad').order_by("question_order")
     ):
         data = model_to_dict(conversation_data)
         data.pop('unique_id')
@@ -387,7 +396,7 @@ async def user_submit_callback_handler(client, callback_query):
         await QnAForAds.objects.abulk_create(QUERY)
         await QnA.objects.filter(from_user_id=from_user_id).adelete()
 
-        response_to_user = f"Thank you for your request, your unique request id is {new_unique_id} we have begun sourcing the best offers across the verified brokers network, and will get back to you as soon as possible.\n"
+        response_to_user = f"Thank you for submitting your request! Your unique ID is: `{new_unique_id}`. Our team is actively sourcing the best offers through our verified brokers network and will provide you with an update at the earliest opportunity."
 
         await client.send_message(callback_query.message.chat.id, response_to_user)
 
@@ -448,7 +457,7 @@ async def user_submit_callback_handler(client, callback_query):
         await QnAForReplies.objects.abulk_create(QUERY)
         await QnA.objects.filter(from_user_id=from_user_id).adelete()
 
-        response_to_user = f"Thank you for your response, your unique request id is {new_unique_id} we have begun sourcing the best offers across the verified brokers network, and will get back to you as soon as possible.\n"
+        response_to_user = f"Thank you for submitting your offer. We'll notify you if your offer has been selected"
         await client.send_message(callback_query.message.chat.id, response_to_user)
 
         print(new_unique_id)

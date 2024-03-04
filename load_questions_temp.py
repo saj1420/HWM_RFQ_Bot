@@ -41,55 +41,58 @@ def load_question(data, conversation_type):
 
 NQ_DATA = """
 question_order: 1 
-question_text: Please provide your best contact Email.
+question_text: Primary Email Address:
 regex_pattern: ^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$
 error_response: Please use proper email format and try again.
 is_private_question: True
 -----
 question_order:2
-question_text: ASIC model you are looking for?
+question_text: Desired ASIC Model:
 -----
 question_order: 3
-question_text: Quantity of machines?
+question_text: Quantity of Machines Needed:
 regex_pattern: ^.{0,15}$
 error_response: COMEON !!!!!
 -----
 question_order: 4
-question_text: What’s your target price per TH?
+question_text: Target Price per TH:
 -----
 question_order: 5
-question_text: What is your timeline to make the purchase?
+question_text: Destination Country:
 -----
 question_order: 6 
-question_text: Any notes you would like to share?
+question_text: Purchase Timeline:
+-----
+question_order: 7 
+question_text: Any Additional Information:
 """
 
 load_question(NQ_DATA, 'NQ')
 
 RQ_DATA = """
 question_order: 1
-question_text: Model
+question_text: Model available:
 -----
 question_order: 2
-question_text: Quantity
+question_text: Quantity available:
 -----
 question_order: 3
-question_text: Price per TH
+question_text: Offered price per TH:
 -----
 question_order: 4
-question_text: Shipping Cost
+question_text: Shipping cost per unit:
 -----
 question_order: 5
-question_text: Shipping Terms
+question_text: Shipping terms:
 -----
 question_order: 6
-question_text: Stock or futures, if futures, which batch?
+question_text: Specify batch:
 -----
 question_order: 7
-question_text: Quote expiration date & time
+question_text: Quote expiration date & time:
 -----
 question_order: 8
-question_text: notes
+question_text: Additional information:
 """
 
 load_question(RQ_DATA, 'RQ')

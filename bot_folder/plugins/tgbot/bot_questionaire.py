@@ -77,6 +77,8 @@ async def newquote(client, message):
     question_object = await QnA.objects.filter(from_user_id=message.from_user.id).order_by("question_order").afirst()
 
     if not question_object:
+
+        await message.reply('To submit RFQ, please provide the following information')
         await initiate_questions(
             client, from_user_id=message.from_user.id, conversation_type=ConversationType.NEW_QUOTE
         )
