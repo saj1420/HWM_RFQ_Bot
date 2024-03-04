@@ -47,6 +47,17 @@ async def send_pending_qna(client, from_user_id):
         pending_qna = shared_object.clients["qna_queue_dict"][from_user_id].pop(0)
         conversation_type, linked_ad = pending_qna
         public_channel_data_string = await public_ad_question(linked_ad)
+
+        if conversation_type == ConversationType.RESPONSE_TO_QUOTE:
+            response_to = f"RFQ ID: `{linked_ad.unique_id}`"
+        else:
+            response_to = f"RFS ID: `{linked_ad.unique_id}`"
+
+        public_channel_data_string = (
+            f"Thank you for responding to {response_to}\nHere are the RFQ details:\n" + public_channel_data_string
+        )
+        public_channel_data_string += "\nPlease respond to the messages below and after you have answered all questions, you will be prompted to Submit your offer."
+
         await client.send_message(from_user_id, public_channel_data_string)
         await initiate_questions(
             client,
@@ -292,7 +303,7 @@ async def send_offer(client, callback_query):
         public_channel_data_string = (
             f"Thank you for responding to {response_to}\nHere are the RFQ details:\n" + public_channel_data_string
         )
-        public_channel_data_string += "Please respond to the messages below and after you have answered all questions, you will be prompted to Submit your offer."
+        public_channel_data_string += "\nPlease respond to the messages below and after you have answered all questions, you will be prompted to Submit your offer."
         await client.send_message(callback_query.from_user.id, public_channel_data_string)
 
         await initiate_questions(
