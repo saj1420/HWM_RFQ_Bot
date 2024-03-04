@@ -7,7 +7,9 @@ from hydrogram import Client, filters
 from shared_config import shared_object
 
 
-@Client.on_message(filters.user(shared_object.clients["super_admin"]) & filters.command("restart_bot", prefixes="!"))
+@Client.on_message(
+    filters.user(shared_object.clients["super_admin"]) & filters.command("restart_bot", prefixes="!"), group=-1
+)
 async def restart(client, message):
     """
     This is a message handler that is used to restart the bot
