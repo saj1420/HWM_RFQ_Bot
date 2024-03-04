@@ -277,7 +277,9 @@ async def send_offer(client, callback_query):
     conversation_type = mapping[linked_ad.conversation_type]
 
     question_object = (
-        await QnA.objects.filter(from_user_id=callback_query.from_user.id).order_by("question_order").afirst()
+        await QnA.objects.filter(from_user_id=callback_query.from_user.id, response_text="")
+        .order_by("question_order")
+        .afirst()
     )
 
     if not question_object:

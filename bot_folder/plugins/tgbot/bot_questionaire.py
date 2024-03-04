@@ -79,7 +79,11 @@ async def initiate_questions(client, from_user_id, conversation_type, linked_ad=
 async def newquote(client, message):
     await has_private_forwards_handler_for_message_handlers(client, message)
 
-    question_object = await QnA.objects.filter(from_user_id=message.from_user.id).order_by("question_order").afirst()
+    question_object = (
+        await QnA.objects.filter(from_user_id=message.from_user.id, response_text="")
+        .order_by("question_order")
+        .afirst()
+    )
 
     if not question_object:
 
@@ -89,16 +93,9 @@ async def newquote(client, message):
         )
     else:
 
-        if question_object.response_text != "":
-            # Previous conversation isnt recoverable easily, so deleting it
-            await question_object.adelete()
-            await initiate_questions(
-                client, from_user_id=message.from_user.id, conversation_type=ConversationType.NEW_QUOTE
-            )
-        else:
-            await message.reply(
-                "Complete answering pending questions, you cant have two conversation with bot\n/continue_rfq to repeat the question"
-            )
+        await message.reply(
+            "Complete answering pending questions, you cant have two conversation with bot\n/continue_rfq to repeat the question"
+        )
     message.stop_propagation()
 
 
