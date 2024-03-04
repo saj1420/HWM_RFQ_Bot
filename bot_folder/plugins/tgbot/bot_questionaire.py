@@ -16,6 +16,11 @@ async def chat_id(client, message):
 
 @Client.on_message(filters.private & filters.command("continue", prefixes="/"), group=-1)
 async def continue_questions(client, message):
+
+    next_question_object = (
+        await QnA.objects.filter(from_user_id=message.from_user.id).order_by("question_order").afirst()
+    )
+
     next_question_object = (
         await QnA.objects.filter(from_user_id=message.from_user.id, response_text="")
         .order_by("question_order")
@@ -35,10 +40,13 @@ async def delete_questions(client, message):
         .order_by("question_order")
         .afirst()
     )
+    if next_question_object:
+        await next_question_object.adelete()
 
-    await next_question_object.adelete()
+        await message.reply("Deleted previous conversations that isnt submitted")
+    else:
+        await message.reply("We didnt find any previous conversations that isnt submitted")
 
-    await message.reply("Deleted previos questions that isnt submitted")
     message.stop_propagation()
 
 
@@ -98,9 +106,17 @@ async def newquote(client, message):
             client, from_user_id=message.from_user.id, conversation_type=ConversationType.NEW_QUOTE
         )
     else:
-        await message.reply(
-            "Complete answering pending questions, you cant have two conversation with bot\n/continue to repeat the question /delete to delete previous conversation"
-        )
+
+        if question_object.response_text != "":
+            # Previous conversation isnt recoverable easily, so deleting it
+            await question_object.adelete()
+            await initiate_questions(
+                client, from_user_id=message.from_user.id, conversation_type=ConversationType.NEW_QUOTE
+            )
+        else:
+            await message.reply(
+                "Complete answering pending questions, you cant have two conversation with bot\n/continue to repeat the question /delete to delete previous conversation"
+            )
     message.stop_propagation()
 
 
