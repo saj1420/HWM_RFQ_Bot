@@ -14,7 +14,7 @@ async def chat_id(client, message):
     await message.reply(message.chat.id)
 
 
-@Client.on_message(filters.private & filters.command("continue", prefixes="/"), group=-1)
+@Client.on_message(filters.private & filters.command("continue_rfq", prefixes="/"), group=-1)
 async def continue_questions(client, message):
 
     next_question_object = (
@@ -29,24 +29,6 @@ async def continue_questions(client, message):
 
     if next_question_object:
         await message.reply(next_question_object.question_text)
-    message.stop_propagation()
-
-
-@Client.on_message(filters.private & filters.command("delete", prefixes="/"), group=-1)
-async def delete_questions(client, message):
-
-    next_question_object = (
-        await QnA.objects.filter(from_user_id=message.from_user.id, response_text="")
-        .order_by("question_order")
-        .afirst()
-    )
-    if next_question_object:
-        await next_question_object.adelete()
-
-        await message.reply("Deleted previous conversations that isnt submitted")
-    else:
-        await message.reply("We didnt find any previous conversations that isnt submitted")
-
     message.stop_propagation()
 
 
@@ -115,7 +97,7 @@ async def newquote(client, message):
             )
         else:
             await message.reply(
-                "Complete answering pending questions, you cant have two conversation with bot\n/continue to repeat the question /delete to delete previous conversation"
+                "Complete answering pending questions, you cant have two conversation with bot\n/continue_rfq to repeat the question"
             )
     message.stop_propagation()
 
