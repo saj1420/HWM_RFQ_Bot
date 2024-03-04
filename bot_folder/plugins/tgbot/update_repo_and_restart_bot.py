@@ -68,6 +68,14 @@ async def update_repo(client, message):
     else:
         await message.reply_text(f"`{out}`")
 
+    try:
+        out = subprocess.check_output(["python", "load_questions_temp.py"]).decode("UTF-8")
+    except Exception as e:
+        # If there is an error, return the error message to the user
+        return await message.reply_text(str(e))
+    else:
+        await message.reply_text(f"`{out}`")
+
     await restart(client, message)
 
 
