@@ -30,9 +30,13 @@ async def continue_questions(client, message):
 @Client.on_message(filters.private & filters.command("delete", prefixes="/"), group=-1)
 async def delete_questions(client, message):
 
-    await QnA.objects.filter(from_user_id=message.from_user.id, response_text="").order_by(
-        "question_order"
-    ).afirst().adelete()
+    next_question_object = (
+        await QnA.objects.filter(from_user_id=message.from_user.id, response_text="")
+        .order_by("question_order")
+        .afirst()
+    )
+
+    await next_question_object.adelete()
 
     await message.reply("Deleted previos questions that isnt submitted")
     message.stop_propagation()
