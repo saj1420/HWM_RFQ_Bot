@@ -44,7 +44,7 @@ async def update_repo(client, message):
 
     try:
         # Run the `git pull` command to pull the latest changes from the repository
-        out = subprocess.check_output(["git", "pull"]).decode("UTF-8")
+        out = subprocess.check_output(["git", "pull", "--rebase", "origin "]).decode("UTF-8")
     except Exception as e:
         # If there is an error, return the error message to the user
         return await message.reply_text(str(e))

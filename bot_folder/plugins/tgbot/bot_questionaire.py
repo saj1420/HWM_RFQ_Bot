@@ -27,6 +27,17 @@ async def continue_questions(client, message):
     message.stop_propagation()
 
 
+@Client.on_message(filters.private & filters.command("delete", prefixes="/"), group=-1)
+async def delete_questions(client, message):
+
+    await QnA.objects.filter(from_user_id=message.from_user.id, response_text="").order_by(
+        "question_order"
+    ).afirst().adelete()
+
+    await message.reply("Deleted previos questions that isnt submitted")
+    message.stop_propagation()
+
+
 @Client.on_message(filters.private & filters.command("start", prefixes="/"), group=-1)
 async def start(client, message):
     name = f"{message.from_user.first_name} {(message.from_user.last_name or '')}"
@@ -83,7 +94,9 @@ async def newquote(client, message):
             client, from_user_id=message.from_user.id, conversation_type=ConversationType.NEW_QUOTE
         )
     else:
-        await message.reply("Complete answering pending questions, you cant have two conversation with bot")
+        await message.reply(
+            "Complete answering pending questions, you cant have two conversation with bot\n/continue to repeat the question /delete to delete previous conversation"
+        )
     message.stop_propagation()
 
 
