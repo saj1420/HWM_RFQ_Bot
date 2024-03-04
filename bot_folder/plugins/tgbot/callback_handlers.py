@@ -319,7 +319,7 @@ async def send_offer(client, callback_query):
         shared_object.clients["qna_queue_dict"][callback_query.from_user.id] = current_qna_from_user
 
         await callback_query.answer(
-            "We will send questions about this ad after you have answered pending questions about previous ones",
+            "We will send questions about this ad after you have answered pending questions about previous ones, Send /continue to continue previous conversation",
             show_alert=True,
         )
 

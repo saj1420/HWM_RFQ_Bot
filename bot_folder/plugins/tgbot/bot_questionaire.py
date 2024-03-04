@@ -14,7 +14,7 @@ async def chat_id(client, message):
     await message.reply(message.chat.id)
 
 
-@Client.on_message(filters.private & filters.command("continue_rfq", prefixes="/"), group=-1)
+@Client.on_message(filters.private & filters.command("continue", prefixes="/"), group=-1)
 async def continue_questions(client, message):
 
     next_question_object = (
@@ -94,7 +94,7 @@ async def newquote(client, message):
     else:
 
         await message.reply(
-            "Complete answering pending questions, you cant have two conversation with bot\n/continue_rfq to repeat the question"
+            "Complete answering pending questions, you cant have two conversation with bot\nSend /continue to continue previous conversation"
         )
     message.stop_propagation()
 
