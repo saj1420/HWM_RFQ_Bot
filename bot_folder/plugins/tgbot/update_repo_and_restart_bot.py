@@ -74,7 +74,7 @@ async def update_repo(client, message):
         # If there is an error, return the error message to the user
         return await message.reply_text(str(e))
     else:
-        await message.reply_text(f"`{out}`")
+        await message.reply_text(f"`{out or '??'}`")
 
     await restart(client, message)
 
